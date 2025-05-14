@@ -12,7 +12,6 @@ alerting:
             - "localhost:9093"
 
 scrape_configs:
-
 {% set roles = [] %}
 {% for host in groups['exporters'] %}
 {% set _ = roles.append(hostvars[host]['role']) %}
@@ -24,9 +23,9 @@ scrape_configs:
 {% for host in groups['exporters'] if hostvars[host]['role'] == role %}
       - targets: ['{{ hostvars[host]['ansible_host'] }}:{{ hostvars[host]['port'] }}']
         labels:
-          environment: '{{ hostvars[host]["environment"] }}'
-          role: '{{ hostvars[host]["role"] }}'
-          instance: '{{ hostvars[host]["ansible_host"] }}'
+          environment: '{{ hostvars[host]['environment'] }}'
+          role: '{{ hostvars[host]['role'] }}'
+          instance: '{{ hostvars[host]['ansible_host'] }}'
 {% endfor %}
 {% endfor %}
 
@@ -36,32 +35,25 @@ scrape_configs:
       module: [http_2xx]
     static_configs:
       - targets:
-          - https://dev-frontend.example.com
+          - https://dev.onthe-top.com
         labels:
           environment: dev
           role: frontend
           name: dev-frontend
 
       - targets:
-          - https://dev-backend.example.com/health
+          - https://dev-backend.onthe-top.com/api/v1/health
         labels:
           environment: dev
           role: backend
           name: dev-backend
 
       - targets:
-          - https://prod-frontend.example.com
+          - https://dev-ai.onthe-top.com/health
         labels:
-          environment: prod
-          role: frontend
-          name: prod-frontend
-
-      - targets:
-          - https://prod-backend.example.com/health
-        labels:
-          environment: prod
-          role: backend
-          name: prod-backend
+          environment: dev
+          role: ai
+          name: dev-ai
 
     relabel_configs:
       - source_labels: [__address__]
@@ -71,4 +63,4 @@ scrape_configs:
       - source_labels: [name]
         target_label: instance
       - target_label: __address__
-        replacement: BLACKBOX_EXPORTER_IP:9115
+        replacement: 10.10.20.6:9115 # 받을 주소?

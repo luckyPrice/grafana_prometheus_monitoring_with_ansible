@@ -10,7 +10,7 @@
     - nginx
     - prometheus
     - grafana
-    # - alertmanager
+    - alertmanager
 
 - hosts: blackbox
   become: true
