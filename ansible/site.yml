@@ -33,3 +33,9 @@
   become: true
   roles:
     - node_exporter
+
+- hosts: monitoring_targets_gpu2
+  become: true
+  roles:
+    - dcgm_exporter
+

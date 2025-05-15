@@ -1,0 +1,31 @@
+---
+- name: Install Docker (if not already installed)
+  apt:
+    name: docker.io
+    state: present
+  become: true
+
+- name: Ensure NVIDIA container runtime is available
+  apt:
+    name: nvidia-container-toolkit
+    state: present
+  become: true
+
+- name: Pull dcgm-exporter image
+  docker_image:
+    name: nvcr.io/nvidia/k8s/dcgm-exporter
+    tag: 3.1.6-3.1.5-ubuntu20.04
+    source: pull
+  become: true
+
+- name: Run dcgm-exporter container
+  docker_container:
+    name: dcgm-exporter
+    image: nvcr.io/nvidia/k8s/dcgm-exporter:3.1.6-3.1.5-ubuntu20.04
+    restart_policy: always
+    ports:
+      - "9400:9400"
+    runtime: nvidia
+    state: started
+    detach: true
+  become: true

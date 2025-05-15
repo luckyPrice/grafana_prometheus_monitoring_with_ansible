@@ -20,6 +20,7 @@
     src: dashboards/
     dest: "{{ grafana.dashboards_dir }}"
     mode: '0644'
+  when: dashboards_exist | default(false)
   notify: Restart grafana
 
 - name: Create Grafana data volume
